@@ -1,13 +1,11 @@
 import socket
 import threading
 import utilities
+import constants
 
-PORT=5050
 IP=utilities.get_ip()
-ADDR=(IP,PORT)
-HEADER=64
-FORMAT='utf-8'
-DISCONNECT_MESSAGE='bye_0x8x0_eyb'
+ADDR=(IP,constants.PORT)
+username=str(input('please enter a username : '))
 
 server=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 server.bind(ADDR)
@@ -16,18 +14,18 @@ def handleclient(conn,addr):
     print(f'[NEW CONNECTED] {addr} connected')
     connected=True
     while connected:
-        msg_length=conn.recv(HEADER).decode(FORMAT)
-        if msg_length:
-            msg_length=int(msg_length)
-            msg=conn.recv(msg_length)
-            msg=msg.decode(FORMAT)
-            if msg==DISCONNECT_MESSAGE:
-                connected=False
-                continue
-            print(f'[NEW MESSAGE] {socket.gethostbyaddr(addr[0])} : {msg}')
+        msg=utilities.recieve_msg(conn)
+        if not msg:
+            pass
+        elif msg==constants.PING_MSG:
+            utilities.send_msg(username,conn)
+        elif msg==constants.DISCONNECT_MESSAGE:
+            connected=False
+        else :
+            print(f'[NEW MESSAGE] {addr} : {msg}')
     print(f'[DISCONNECTING] {socket.gethostbyaddr(addr[0])} ')
     conn.close()
-    
+
 def start():
     print(f'[STARTING] Server starting')
     server.listen()
@@ -39,5 +37,4 @@ def start():
         print(f'[CONNECTED] {threading.active_count()-1}')
 
 if __name__=='__main__':
-    start()        
-        
+    start()
