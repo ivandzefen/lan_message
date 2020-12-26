@@ -1,9 +1,10 @@
 import socket
 import threading
+import utilities
 
 PORT=5050
-SERVER='10.0.0.30'
-ADDR=(SERVER,PORT)
+IP=utilities.get_ip()
+ADDR=(IP,PORT)
 HEADER=64
 FORMAT='utf-8'
 DISCONNECT_MESSAGE='bye_0x8x0_eyb'
