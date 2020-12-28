@@ -26,11 +26,12 @@ def handleclient(conn,addr,user_list,username):
     print(f'[DISCONNECTING] {socket.gethostbyaddr(addr[0])} ')
     conn.close()
 
-def start(user_list,done):
+def start(user_list,checkvalues):
 
     username=str(input('please enter a username : '))
     utilities.get_connected_users(user_list)
-    done=True
+    checkvalues['updating']=False
+    print('hey')
     server=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     server.bind(ADDR)
     #print(f'[STARTING] Server starting')
@@ -43,11 +44,11 @@ def start(user_list,done):
         thread = threading.Thread(target=handleclient,args=(conn,addr,username,user_list))
         thread.start()
         #print(f'[CONNECTED] {threading.active_count()-1}')
-        if change!=user_list[constants.CHANGE_BIT] :
-            change=user_list[constants.CHANGE_BIT]
+        if checkvalues['update_table'] :
             user_list={}
-            user_list[constants.CHANGE_BIT]=change
+            checkvalues['update_table']=False
             utilities.get_connected_users(user_list)
+            checkvalues['updating']=False
 
 if __name__=='__main__':
     start()

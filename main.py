@@ -7,15 +7,16 @@ import threading
 import time
 
 def begin():
-    user_list={constants.CHANGE_BIT:True}
+    user_list={}
+    checkvalues={'update_table':False,'updating':True}
     done=False
     print(user_list)
-    change=user_list[constants.CHANGE_BIT]
-    s_thread=threading.Thread(target=server.start,args=(user_list,done))
+    s_thread=threading.Thread(target=server.start,args=(user_list,checkvalues))
     s_thread.start()
     while True :
-        while not done:
-            pass
+        while checkvalues['updating']:
+            print('waiting')
+            time.sleep(10)
         list=[]
         print('here')
         for i in user_list :
@@ -50,8 +51,8 @@ def begin():
             if msg=='EXIT' :
                 inchat=False
                 user_list[ip][2]=0
-                user_list[constants.CHANGE_BIT]= not user_list[constants.CHANGE_BIT]
-                done=False
+                checkvalues['update_table']=True
+                checkvalues['updating']=True
                 continue
             utilities.send_msg(msg,ip,name)
 

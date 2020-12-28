@@ -34,12 +34,14 @@ def get_connected_users(user_list) :
             try :
                 sock.connect(addr)
                 print('here')
-                utilities.send_msg(constants.PING_MSG,sock)
+                utilities.sendmsg(constants.PING_MSG,sock)
                 user_list[i]=[utilites.recieve_msg(sock)[0],[],0]
                 sock.close()
                 del(sock)
+                print('done here')
             except :
                 continue
+    print('done')
     del(output)
 
 def recieve_msg(conn) :
@@ -73,3 +75,13 @@ def send_msg(msg,ip,username):
     conn.send(lengthd)
     conn.send(disconnect)
     conn.close()
+
+def sendmsg(msg,conn):
+    message=msg.encode(constants.FORMAT)
+    length=str(len(message)).encode(constants.FORMAT)
+    length+=b' '
+    length+='test'.encode(constants.FORMAT)
+    length+=b' '*(constants.HEADER-len(lengthd))
+    conn.send(length)
+    conn.send(message)
+    print('sent')
