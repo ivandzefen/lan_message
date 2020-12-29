@@ -33,23 +33,23 @@ def get_connected_users(user_list) :
             print(addr)
             try :
                 sock.connect(addr)
-                print('here')
-                utilities.sendmsg(constants.PING_MSG,sock)
-                user_list[i]=[utilites.recieve_msg(sock)[0],[],0]
+                #print('here')
+                sendmsg(constants.PING_MSG,sock)
+                user_list[i]=[recieve_msg(sock)[0],[],0]
                 sock.close()
                 del(sock)
-                print('done here')
+                #print('done here')
             except :
                 continue
-    print('done')
+    #print('done')
     del(output)
 
 def recieve_msg(conn) :
     msg_head=conn.recv(constants.HEADER).decode(constants.FORMAT)
     if msg_head:
-        msg_length=msg_head.split(' ')[0]
+        msg_length=int(msg_head.split(' ')[0])
         user_name=msg_head.split(' ')[1]
-        msg=conn.recv(msg_lenght)
+        msg=conn.recv(msg_length)
         msg=msg.decode(constants.FORMAT)
         return (msg,user_name)
     else :
@@ -65,8 +65,8 @@ def send_msg(msg,ip,username):
     message=msg.encode(constants.FORMAT)
     length=str(len(message)).encode(constants.FORMAT)
     length+=b' '
-    length+=user.encode(constants.FORMAT)
-    length+=b' '*(constants.HEADER-len(lengthd))
+    length+=username.encode(constants.FORMAT)
+    length+=b' '*(constants.HEADER-len(length))
     disconnect=constants.DISCONNECT_MESSAGE.encode(constants.FORMAT)
     lengthd=str(len(disconnect)).encode(constants.FORMAT)
     lengthd+=b' '*(constants.HEADER-len(lengthd))
@@ -81,7 +81,7 @@ def sendmsg(msg,conn):
     length=str(len(message)).encode(constants.FORMAT)
     length+=b' '
     length+='test'.encode(constants.FORMAT)
-    length+=b' '*(constants.HEADER-len(lengthd))
+    length+=b' '*(constants.HEADER-len(length))
     conn.send(length)
     conn.send(message)
     print('sent')

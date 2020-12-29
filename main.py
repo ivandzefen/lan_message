@@ -15,22 +15,32 @@ def begin():
     s_thread.start()
     while True :
         while checkvalues['updating']:
-            print('waiting')
-            time.sleep(10)
+            #print('waiting')
+            time.sleep(3)
         list=[]
-        print('here')
+        #print('here')
         for i in user_list :
             if i!=constants.CHANGE_BIT:
                 list.append(i)
         if  not len(list) :
-            printf('no connected users retrying')
-            time.sleep(10)
+            ans=input('no connected users. Wait ?(y/n)')
+            if 'y' in ans.lower() :
+                while not len(list) :
+                    utilities.get_connected_users(user_list)
+                    for i in user_list :
+                        list.append(i)
+                    print('waiting...')
+                    time.sleep(3)
+            else :
+                checkvalues['update_table']=True
+                checkvalues['updating']=True
+        if not len(list):
             continue
         print('ONLINE')
         for i in range(len(list)):
             print(f'{i+1} : {user_list[list[i]][0]}')
         chat=0
-        while not chat:
+        while not chat :
             try :
                 chat=int(input('select a user whit whom you want to chat'))
                 if (chat-1) not in range(len(list)) :
@@ -39,7 +49,7 @@ def begin():
             except :
                 print('select a valid user')
         chat=chat-1
-        inchat=True
+        inchat=True and len(list)
         ip=list[chat]
         name=user_list[ip][0]
         user_list[ip][2]=1
